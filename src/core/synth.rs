@@ -40,7 +40,8 @@ impl SynthPart {
     }
     pub fn tick_sample(&mut self, _channel: usize) -> f32 {
         self.increase_sample_index();
-        (self.current_sample_index * 440.0 * std::f32::consts::PI * 2.0 / self.option.sample_rate)
-            .sin()
+        // println!("{}",self.param.level.unwrap());
+        (self.current_sample_index * 220.0 * std::f32::consts::PI * 2.0 / self.option.sample_rate)
+            .sin() * self.param.level.unwrap()
     }
 }

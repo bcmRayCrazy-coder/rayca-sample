@@ -11,7 +11,7 @@ use crate::{
 };
 
 pub struct AudioSynthThread {
-    synth: Arc<RwLock<Synth>>,
+    pub synth: Arc<RwLock<Synth>>,
 }
 
 impl AudioSynthThread {
