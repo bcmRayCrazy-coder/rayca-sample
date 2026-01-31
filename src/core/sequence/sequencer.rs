@@ -41,9 +41,9 @@ impl Sequencer {
         true
     }
 
-    pub fn part_step_param(&self, part: Part) -> PartParam {
+    pub fn part_step_param(&self, part: &Part) -> PartParam {
         let mut param = part.param.fallback_default();
-        if let Some(motion) = part.motion_seq {
+        if let Some(motion) = &part.motion_seq {
             param = motion[self.step].fallback(param);
         }
         param
