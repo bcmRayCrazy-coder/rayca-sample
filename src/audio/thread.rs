@@ -2,13 +2,7 @@ use std::sync::{Arc, RwLock};
 
 use cpal::traits::StreamTrait;
 
-use crate::{
-    audio::setup::setup_stream,
-    core::{
-        global::GlobalParam,
-        synth::{Synth, SynthPart},
-    },
-};
+use crate::{audio::setup::setup_stream, core::synth::Synth};
 
 pub struct AudioSynthThread {
     pub synth: Arc<RwLock<Synth>>,
@@ -17,10 +11,7 @@ pub struct AudioSynthThread {
 impl AudioSynthThread {
     pub fn default() -> Self {
         Self {
-            synth: Arc::new(RwLock::new(Synth {
-                param: GlobalParam::default(),
-                parts: std::array::from_fn(|_i| SynthPart::default()),
-            })),
+            synth: Arc::new(RwLock::new(Synth::default())),
         }
     }
 

@@ -1,4 +1,3 @@
-use anyhow::Ok;
 use rayca_sample::audio::thread::AudioSynthThread;
 fn main() -> anyhow::Result<()> {
     println!("Hello Rayca-sample");
@@ -13,7 +12,6 @@ fn main() -> anyhow::Result<()> {
             part.param.level = Some(level);
         }
         drop(synth);
-        println!("All part's level changed to {}", level);
 
         level += 0.3;
         if level > 1.0 {

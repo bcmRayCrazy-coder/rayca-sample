@@ -1,7 +1,7 @@
 use crate::core::part::part::Part;
 
 pub struct Global {
-    pub parts: [Part; 12],
+    pub parts: [Part; 10],
     pub param: GlobalParam,
 }
 

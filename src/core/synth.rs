@@ -1,14 +1,23 @@
 use crate::core::{
     global::GlobalParam,
     part::{option::PartOption, param::PartParam},
+    sequence::sequencer::Sequencer,
 };
 
 pub struct Synth {
     pub param: GlobalParam,
-    pub parts: [SynthPart; 12],
+    pub parts: [SynthPart; 10],
+    pub sequencer: Sequencer,
 }
 
 impl Synth {
+    pub fn default() -> Self {
+        Self {
+            param: GlobalParam::default(),
+            parts: std::array::from_fn(|_i| SynthPart::default()),
+            sequencer: Sequencer::default(),
+        }
+    }
     pub fn tick_sample(&mut self, channel: usize) -> f32 {
         // 0.0
         let mut sample = 0f32;
@@ -40,8 +49,10 @@ impl SynthPart {
     }
     pub fn tick_sample(&mut self, _channel: usize) -> f32 {
         self.increase_sample_index();
+        // TODO: Synth
         // println!("{}",self.param.level.unwrap());
         (self.current_sample_index * 220.0 * std::f32::consts::PI * 2.0 / self.option.sample_rate)
-            .sin() * self.param.level.unwrap()
+            .sin()
+            * self.param.level.unwrap()
     }
 }

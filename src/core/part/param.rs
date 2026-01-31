@@ -25,7 +25,7 @@ pub struct PartParam {
 
     /**
      * Sample Play Speed
-     * 1/8 ~ 8 
+     * 1/8 ~ 8
      */
     pub speed: Option<f32>,
 
@@ -104,5 +104,26 @@ impl PartParam {
             attack: Some(0f32),
             decay: Some(1f32),
         }
+    }
+
+    pub fn fallback(&self, fallback: Self) -> Self {
+        Self {
+            sample: self.sample.or(fallback.sample),
+            start: self.start.or(fallback.start),
+            length: self.length.or(fallback.length),
+            hi_cut: self.hi_cut.or(fallback.hi_cut),
+            speed: self.speed.or(fallback.speed),
+            eg_int: self.eg_int.or(fallback.eg_int),
+            eg_attack: self.eg_attack.or(fallback.eg_attack),
+            eg_decay: self.eg_decay.or(fallback.eg_decay),
+            level: self.level.or(fallback.level),
+            pan: self.pan.or(fallback.pan),
+            attack: self.attack.or(fallback.attack),
+            decay: self.decay.or(fallback.decay),
+        }
+    }
+
+    pub fn fallback_default(&self) -> Self {
+        self.fallback(Self::default())
     }
 }
