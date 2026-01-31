@@ -5,4 +5,5 @@ edition = "2024"
 
 [dependencies]
 anyhow = "1.0.100"
+audrey = { version = "0.3.0", features = ["flac", "wav", "ogg_vorbis"] }
 cpal = "0.17.1"
