@@ -1,4 +1,4 @@
-use std::sync::{Arc, RwLock};
+use std::sync::{Arc, RwLock, RwLockWriteGuard};
 
 use cpal::{
     FromSample, SizedSample,
@@ -33,13 +33,16 @@ where
     T: FromSample<f32> + SizedSample,
 {
     let channel_num = config.channels as usize;
+
+    let mut write_synth = synth.write().expect("Unable to reach synth");
+    for part in write_synth.parts.iter_mut() {
+        part.option.sample_rate = config.sample_rate as f32;
+    }
+    drop(write_synth);
+
     let stream = device.build_output_stream(
         config,
         move |output: &mut [T], _: &cpal::OutputCallbackInfo| {
-            // if let Ok(synth) = synth.try_write().as_ref() {
-            //     process_frame(output, synth, channel_num);
-            //     let _ = synth;
-            // }
             match synth.try_write() {
                 Ok(mut synth) => {
                     process_frame(output, &mut synth, channel_num);
@@ -50,7 +53,6 @@ where
         |err| eprintln!("Error building output stream {}", err),
         None,
     )?;
-
     Ok(stream)
 }
 
