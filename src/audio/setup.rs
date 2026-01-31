@@ -1,3 +1,5 @@
+use std::sync::{Arc, RwLock};
+
 use cpal::{
     FromSample, SizedSample,
     traits::{DeviceTrait, HostTrait},
@@ -25,7 +27,7 @@ fn setup_host_device()
 fn make_stream<T>(
     device: &cpal::Device,
     config: &cpal::StreamConfig,
-    mut synth: Synth,
+    synth: Arc<RwLock<Synth>>,
 ) -> Result<cpal::Stream, anyhow::Error>
 where
     T: FromSample<f32> + SizedSample,
@@ -34,7 +36,16 @@ where
     let stream = device.build_output_stream(
         config,
         move |output: &mut [T], _: &cpal::OutputCallbackInfo| {
-            process_frame(output, &mut synth, channel_num);
+            // if let Ok(synth) = synth.try_write().as_ref() {
+            //     process_frame(output, synth, channel_num);
+            //     let _ = synth;
+            // }
+            match synth.try_write() {
+                Ok(mut synth) => {
+                    process_frame(output, &mut synth, channel_num);
+                }
+                Err(_) => (),
+            };
         },
         |err| eprintln!("Error building output stream {}", err),
         None,
@@ -55,7 +66,7 @@ where
     }
 }
 
-pub fn setup_stream(synth: Synth) -> Result<cpal::Stream, anyhow::Error> {
+pub fn setup_stream(synth: Arc<RwLock<Synth>>) -> Result<cpal::Stream, anyhow::Error> {
     let (_host, device, config) = setup_host_device()?;
     match config.sample_format() {
         cpal::SampleFormat::I8 => make_stream::<i8>(&device, &config.into(), synth),

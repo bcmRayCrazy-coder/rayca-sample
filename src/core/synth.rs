@@ -1,5 +1,6 @@
 use crate::core::{
-    global::GlobalParam, part::{option::PartOption, param::PartParam},
+    global::GlobalParam,
+    part::{option::PartOption, param::PartParam},
 };
 
 pub struct Synth {
@@ -26,6 +27,14 @@ pub struct SynthPart {
 }
 
 impl SynthPart {
+    pub fn default() -> Self {
+        Self {
+            param: PartParam::default(),
+            option: PartOption::default(),
+            current_sample_index: 0f32,
+        }
+    }
+
     fn increase_sample_index(&mut self) {
         self.current_sample_index = (self.current_sample_index + 1.0) % self.option.sample_rate;
     }
