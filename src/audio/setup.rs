@@ -61,9 +61,13 @@ where
     SampleType: FromSample<f32> + SizedSample,
 {
     for frame in output.chunks_mut(channel_num) {
+        let synth_sample = synth.tick_sample();
         for (channel, sample) in frame.iter_mut().enumerate() {
-            let val = SampleType::from_sample(synth.tick_sample(channel));
-            *sample = val;
+            *sample = SampleType::from_sample(match channel {
+                0 => synth_sample[0],
+                1 => synth_sample[1],
+                _ => 0f32,
+            });
         }
     }
 }

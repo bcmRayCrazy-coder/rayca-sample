@@ -16,6 +16,7 @@ pub enum Sample {
     EMPTY,
 }
 
+#[derive(Clone)]
 pub struct SampleCategory {
     pub samples: [Sample; 256],
 }
